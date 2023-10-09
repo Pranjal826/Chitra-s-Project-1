@@ -1,0 +1,111 @@
+<%-include('./partials/header')%>
+<%-include('./partials/nav')%>
+<style>
+    .container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-around;
+    }
+
+    .card {
+        width: 300px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        margin: 20px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .card-header {
+        display: flex;
+        align-items: center;
+        padding: 10px;
+    }
+
+    .dp {
+        max-width: 50px;
+        border-radius: 50%;
+        margin-right: 10px;
+    }
+
+    .name {
+        flex-grow: 1;
+    }
+
+    .card-body img {
+        max-width: 100%;
+        height: auto;
+    }
+
+    .card-footer {
+        padding: 10px;
+        text-align: center;
+        background-color: #f7f7f7;
+    }
+
+    .like-button {
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        padding: 5px 10px;
+        border-radius: 3px;
+        cursor: pointer;
+    }
+
+    .like-button:hover {
+        background-color: #0056b3;
+    }
+
+    .btn {
+        text-align: center;
+        margin-top: 10px;
+    }
+
+    .btn button {
+        margin: 5px;
+    }
+</style>
+
+<div class="container">
+    <% posts.forEach(function(post, idx) { %>
+    <div class="card">
+        <div class="card-header">
+            <img src="<%= post.dp %>" alt="" class="dp">
+            <div class="name">
+                <h3><%= post.name %></h3>
+                <h4><%= post.title %></h4>
+            </div>
+        </div>
+        <div class="card-body">
+            <img src="<%= post.post %>" alt="">
+        </div>
+        <div class="card-footer">
+            <p><%= post.description %></p>
+            <hr>
+            <span>Post Date: <%= post.date.getDate() %>/<%= post.date.getMonth() %>/<%= post.date.getFullYear() %></span>
+        </div>
+        <div class="like">
+            <p>Likes: <span id="likeCount<%= idx %>"><%= post.like %></span></p>
+        </div>
+        <div class="btn">
+            <button class="like-button" data-idx="<%= idx %>">Like</button>
+            <a href="/update/<%= idx %>"><button>Update</button></a>
+            <a href="/delete/<%= idx %>"><button>Delete</button></a>
+        </div>
+    </div>
+    <% }) %>
+</div>
+
+<script>
+    const likeButtons = document.querySelectorAll('.like-button');
+    
+    likeButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const idx = button.getAttribute('data-idx');
+            const likeCountElement = document.getElementById(`likeCount${idx}`);
+            const currentLikes = parseInt(likeCountElement.innerText, 10);
+            const newLikes = currentLikes + 1;
+            likeCountElement.innerText = newLikes;
+        });
+    });
+</script>
+<%-include('./partials/footer')%>
